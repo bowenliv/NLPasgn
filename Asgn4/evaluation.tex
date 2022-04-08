@@ -1,0 +1,131 @@
+\documentclass{article}
+%\usepackage{psfig}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{xcolor}
+\setlength\topmargin{-0.25in}
+\setlength{\oddsidemargin}{-0.25 in}
+\setlength{\evensidemargin}{-0.25 in}
+\setlength{\textwidth}{6.75 in}
+\setlength{\textheight}{9 in}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0 in}
+
+% For Smara's question
+\usepackage{latexsym}
+\usepackage{amsthm}
+\usepackage[leqno]{amsmath}
+\usepackage{amssymb}
+%\usepackage{parsetree}
+
+\let\sym\textrm
+
+% Use empty version to hand out, or show contents for solution set
+%\newcommand{\solution}[1]{{\em #1}}
+\newcommand{\solution}[1]{}
+
+\newcommand{\ignore}[1]{}
+
+\newcommand{\config}[1]{\mbox{$\langle$ \mbox{#1} $\rangle$}}
+
+%\usepackage{fullpage}
+%\usepackage{qtree}\qtreecenterfalse
+%\newcommand{\vertcenter}[1]{\raisebox{-0.5\height}{\raisebox{\depth}{#1}}}
+%\newcommand{\synch}[2]{\ensuremath{\left(\vertcenter{#1}}~\mathord,~\vertcenter{#2}\right)}
+%\newcommand{\boxnum}[1]{\ensuremath{{\setlength{\fboxsep}{1pt}\raisebox{1pt}{\hspace{1pt}\fbox{\tiny #1}\hspace{1pt}}}}}
+%\usepackage{amsmath}
+
+
+
+\begin{document}
+
+\section*{Question 1}
+
+{\bf Part (a).}
+You have been hired by a AwesomeSearchEngine.com to make recommendations concerning language technology.  They have been approached by Whizdee, Inc., a startup company, and in a sales presentation Whizdee's sales representative says the following: "We're doing very exciting work on named entity recognition, and our results are very impressive. One of our teams trained a named entity recognizer on 80\% of our huge training corpus and tested on the other 20\%, and it got 96.2\% recall. And in another experiment, one of our teams trained and tested an even more advanced technology on exactly the same train/test split of the same dataset, and they got a precision of 99.2\%!  With numbers like that, how could you lose??!!!!''  Should your client be impressed by Whizdee's numbers (and exclamation points)?  Briefly and clearly explain why or why not.
+
+\solution{
+They did two experiments and both were reported incompletely: the most important thing for the question was to observe that for most tasks, precision and recall, measured independently, can be traded off against each other; so it's very easy to do well on just one or just the other.  Other valid observations include lack of lower/upper bounds for comparison, lack of information on size of the test set, possibility of a ``lucky'' train/test split (which could be addressed by cross-validation), potential importance of extrinsic versus just intrinsic evaluation, and not taking runtime into account.
+}
+
+\vspace{0.2in}
+{\bf Part (b).}
+Consider a scenario where Alice, Bill, Charlie, and Dara have annotated whether Amazon reviews are \emph{positive} or \emph{negative}.  Below are tables showing how Alice agrees and disagrees others when their annotations are compared. For comparing Alice with Dara, someone spilled coffee on the tabulation of results, and now it's only possible to make out that there are two numbers $a$ and $b$ arranged as shown in the last table.  What are the values of Cohen's $\kappa$ for each of the three annotator pairs?  
+
+  \begin{small}
+  \begin{tabular}{r|ll}
+    & \multicolumn{2}{c}{{\bf Bill}} \\ \hline
+    {\bf Alice} &  Negative & Positive \\
+   Negative                & 20 & 5 \\
+   Positive                 & 55 & 40 \\
+  \end{tabular}
+  
+  \begin{tabular}{r|ll}
+    & \multicolumn{2}{c}{{\bf Charlie}} \\ \hline
+    {\bf Alice} &  Negative & Positive \\
+   Negative                & 60 & 5 \\
+   Positive                 & 25 & 10 \\
+  \end{tabular}
+  
+  \begin{tabular}{r|ll}
+    & \multicolumn{2}{c}{{\bf Dara}} \\ \hline
+    {\bf Alice} &  Negative & Positive \\
+   Negative                & a & b \\
+   Positive                 & a  & b \\
+  \end{tabular}
+\end{small}
+
+\solution{True: For Alice-Dara that arrangement always gives you kappa = 0, no matter what $a$ and $b$ are! Chance agreement ends up being 0.5, and agreement for the classes involves 
+\begin{displaymath}
+[(a+b) / (2a+2b) * 2a/(2a+2b)] + [(a+b)/(2a+2b) * (2b/(2a+2b))]
+\end{displaymath}
+so when you simplify, you end up getting 0.5 as well. Plug it in to the Kappa agreement formula, $\frac{(A0 - Ae)}{(1-Ae)}$ to get $\frac{0}{0.5} = 0$.
+
+For the others (via \url{https://www.easycalculation.com/statistics/cohens-kappa-index.php}): for Alice-Bill kappa = 0.127, and for Alice-Charlie it's 0.241.}
+
+
+\clearpage
+\section*{Question 2}
+
+{\bf Part (a).} Consider the following example of translation, and the discussion of the BLEU score in SLP 11.8.2.
+
+\begin{itemize}
+\item Source:  Fodd bynnag, yr wyf yn ystyried bod iaith hiliol, iaith sy'n gwahaniaethu ar sail rhyw neu ar unrhyw sail arall, a honiadau yn erbyn Aelodau, yn peri tramgwydd.
+\item Reference R:  However, I consider that racist, sexist or other discriminatory language, and allegations against Members, are offensive.
+\item System A: However, I consider racist language, sexist or other discrimination, and allegations against Members to be offensive.
+\item System B:  However, I regard racist language, language that discriminates on the basis of sex or on any other grounds, and allegations against Members, as offensive.
+\item System C: Racist Members consider that discriminatory allegations as language are the basis of offensive sexist allegations, however.
+\item System D: Allegations against members are offensive.
+\end{itemize}
+
+You and at least two other people to should rate the systems for this example on the following criteria, using a 1-to-5 scale where 1 is terrible and 5 is excellent, with brief explanations for your scores.
+\begin{itemize}
+\item Fluency: How good is the system's output as a sentence in the target language, here English?
+\item Adequacy: How well does the system's output convey the meaning of the reference translation?
+\end{itemize}
+How well did you agree or disagree? Discuss divergences among the ratings.
+
+{\bf Part (b).} Separately consider pairs (R,A), (R,B), (R,C), and (R,D) as instances of translation to evaluate.  Note that unlike SLP Figure 11.16, we are considering the candidates \emph{separately}, so in Equation~11.23, the Candidates set would consider just one sentence in each of the four cases.  That is, for (R,A) the figure would contain this (tokenized):
+\begin{small}
+\begin{verbatim}
+Source
+Fodd bynnag, yr wyf yn ystyried bod iaith hiliol, iaith sy'n gwahaniaethu ar sail rhyw neu ar 
+unrhyw sail arall, a honiadau yn erbyn Aelodau, yn peri tramgwydd.
+
+Reference
+However, I consider that racist, sexist or other discriminatory language, and allegations 
+against Members, are offensive.
+
+Candidate
+However, I consider racist language, sexist or other discrimination, and allegations 
+against Members to be offensive.
+\end{verbatim}
+\end{small}
+
+Compute and 1-gram, 2-gram, and 3-gram precision for all four cases, assuming tokenization is done by turning all punctuation into whitespace, splitting tokens on whitespace, and lowercasing everything.  So, for example, the tokenized version of R begin with the following sequence of tokens: \emph{however i consider that racist sexist or...}.  You are welcome to do this computation by hand or by writing your own python code.\footnote{As a more advanced option, you can use the NLTK implementation of the BLEU score, reporting modified n-gram precision (see advanced details, SLP Ch 11 p.~22) intead of simple n-gram precision. See \url{https://www.nltk.org/_modules/nltk/translate/bleu_score.html}, and see \url{https://machinelearningmastery.com/calculate-bleu-score-for-text-python/} for illustrations.}
+
+Comment on how well the n-gram precisions are helping to capture correctness of translations, or not.  Do any of the four examples provide good reasons for introducing the ``brevity penalty'' in BLEU?
+
+
+\end{document}
